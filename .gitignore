@@ -1,0 +1,87 @@
+## Ignore Visual Studio-specific files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.cache
+*.sln.docstates
+*.vscode/
+*.ncrunch*
+ipch/
+*.aps
+*.rsuser
+*.uvprojx
+
+## Ignore build outputs
+bin/
+obj/
+out/
+TestResults/
+AppPackages/
+__pycache__/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Ignore NuGet-related files
+*.nupkg
+*.snupkg
+packages/
+!nuget.config
+!nuget.exe
+!nuget.targets
+project.assets.json
+
+## Ignore Entity Framework Migrations
+Migrations/
+
+## Ignore logs and debugging files
+*.log
+*.tlog
+*.pdb
+*.dmp
+*.mdmp
+
+## Ignore publish and deployment files
+wwwroot/
+node_modules/
+dist/
+PublishProfiles/
+.vscode/
+*.publishsettings
+.env
+
+## Ignore Rider / JetBrains files
+.idea/
+*.sln.iml
+
+## Ignore .NET MAUI specific files
+.platforms/
+**/Resources/Raw/*.db
+**/Resources/Raw/*.sqlite
+*.aot/
+*.apk
+*.ipa
+*.app
+*.xcarchive/
+*.xcuserstate
+*.xcodeproj/
+**/bin/
+**/obj/
+**/app/
+**/*.apk
+**/*.apks
+**/*.aab
+**/*.app
+**/*.ipa
+**/*.xcarchive
+
+## Ignore Docker files
+docker-compose.override.yml
+docker-compose.*.yml
+**/Dockerfile
+**/docker-compose.yml
+
+## Ignore Secrets
+secrets.json
+secrets/
