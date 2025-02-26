@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using OnlineShop.Api.Common;
 using OnlineShop.Api.Data.Entities;
 using OnlineShop.Api.DTOs;
 using OnlineShop.Api.Models;
@@ -35,37 +36,37 @@ namespace OnlineShop.Api.Services
             _configuration = configuration;
         }
 
-        public async Task<ServiceResponse<TokenResponseDto>> LoginAsync(LoginUserDto request)
+        public async Task<Result<TokenResponseDto>> LoginAsync(LoginUserDto request)
         {
             var user = await _userRepository.GetUserByUserNameAsync(request.UserName);
 
             if(user is null)
             {
-                return ServiceResponse<TokenResponseDto>.FailureResponse("User not found.");
+                return Result<TokenResponseDto>.FailureResult("User not found.");
             }
             if(_passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password) == PasswordVerificationResult.Failed)
             {
-                return ServiceResponse<TokenResponseDto>.FailureResponse("Invalid password.");
+                return Result<TokenResponseDto>.FailureResult("Invalid password.");
             }
 
             var token = await CreateTokenResponse(user);
 
-            return ServiceResponse<TokenResponseDto>.SuccessResponse(token);
+            return Result<TokenResponseDto>.SuccessResult(token);
         }
 
-        public async Task<ServiceResponse<string>> RegisterAsync(CreateUpdateUserDto request)
+        public async Task<Result> RegisterAsync(CreateUpdateUserDto request)
         {
             var existingUser = await _userRepository.GetUserByUserNameAsync(request.UserName);
 
             if (existingUser != null) 
             {
-                return ServiceResponse<string>.FailureResponse("User with this username already exists.");
+                return Result.FailureResult("User with this username already exists.");
             }
 
             var role = await _roleRepository.FindByNameAsync("User");
             if (role == null)
             {
-                return ServiceResponse<string>.FailureResponse("Role not found.");
+                return Result.FailureResult("Role not found.");
             }
 
             var user = _mapper.Map<User>(request);
@@ -76,7 +77,7 @@ namespace OnlineShop.Api.Services
 
             await _userRepository.AddAsync(user);
 
-            return ServiceResponse<string>.SuccessResponse("User registered successfully.");
+            return Result.SuccessResult("User registered successfully.");
 
         }
 
@@ -141,9 +142,27 @@ namespace OnlineShop.Api.Services
             return refreshToken;
         }
 
-        public async Task<ServiceResponse<TokenResponseDto>> RefreshTokensAsync(RefreshTokenRequestDto request)
+        public async Task<Result<TokenResponseDto>> RefreshTokensAsync(RefreshTokenRequestDto request)
         {
-            throw new NotImplementedException();
+            var user = await ValidateRefreshTokenAsync(request.UserId, request.RefreshToken);
+            if (user is null)
+                return Result<TokenResponseDto>.FailureResult("aaaaaaa");
+
+            var token = await CreateTokenResponse(user);
+
+            return Result<TokenResponseDto>.SuccessResult(token);
+        }
+
+        private async Task<User?> ValidateRefreshTokenAsync(int userId, string refreshToken)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user is null || user.RefreshToken != refreshToken
+                || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            {
+                return null;
+            }
+
+            return user;
         }
     }
 }

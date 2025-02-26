@@ -1,13 +1,14 @@
 ﻿using OnlineShop.Api.Models;
 using OnlineShop.Api.DTOs;
+using OnlineShop.Api.Common;
 
 namespace OnlineShop.Api.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<ServiceResponse<UserDto>> GetUserByIdAsync(int userId);
-        Task<ServiceResponse<IEnumerable<UserDto>>> GetAllUsersAsync();
-        Task<ServiceResponse<string>> UpdateUserAsync(CreateUpdateUserDto userDto);
-        Task<ServiceResponse<string>> DeleteUserAsync(int userId);
+        Task<Result<UserDto>> GetUserByIdAsync(int userId);
+        Task<Result<IEnumerable<UserDto>>> GetAllUsersAsync();
+        Task<Result> UpdateUserAsync(CreateUpdateUserDto userDto);
+        Task<Result> DeleteUserAsync(int userId);
     }
 }

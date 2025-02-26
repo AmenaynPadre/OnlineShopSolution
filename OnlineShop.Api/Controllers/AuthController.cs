@@ -43,7 +43,11 @@ namespace OnlineShop.Api.Controllers
         public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
         {
             var result = await _authService.RefreshTokensAsync(request);
-            if (result is null || result.Data.AccessToken is null || result.Data.RefreshToken is null)
+
+            if (result == null || result.Data == null)
+                return Unauthorized("Invalid refresh token.");
+
+            if (result.Data.AccessToken == null || result.Data.RefreshToken == null)
                 return Unauthorized("Invalid refresh token.");
 
             return Ok(result);
