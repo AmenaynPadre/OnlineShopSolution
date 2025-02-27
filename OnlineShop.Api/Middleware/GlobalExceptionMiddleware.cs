@@ -44,7 +44,6 @@ namespace OnlineShop.Api.Middleware
                 message = "The request timed out. Please try again later.";
             }
 
-
             var result = Result.FailureResult(message, statusCode);
 
             context.Response.ContentType = "application/json";
